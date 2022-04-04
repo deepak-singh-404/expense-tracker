@@ -1,6 +1,7 @@
 const express = require('express')
 const dotenv = require('dotenv')
 const passport = require('passport')
+const cors = require('cors')
 dotenv.config({})
 const app = express()
 
@@ -8,6 +9,7 @@ const { connectDatabase } = require('./database/index')
 
 //
 app.use(express.json())
+app.use(cors())
 
 //Passport Middleware
 app.use(passport.initialize());
