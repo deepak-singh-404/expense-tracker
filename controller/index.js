@@ -5,7 +5,7 @@ const { formattedTimestamp } = require('../utils/timestamp')
 const addData = async (req, res) => {
     try {
         if (req.user === "invalidToken") {
-            return res.status(20).json({
+            return res.status(200).json({
                 success: false,
                 statusCode: 401, message: "unauthorized"
             })
@@ -46,7 +46,7 @@ const addData = async (req, res) => {
 const getAllTransactionDescriptions = async (req, res) => {
     try {
         if (req.user === "invalidToken") {
-            return res.status(20).json({
+            return res.status(200).json({
                 success: false,
                 statusCode: 401, message: "unauthorized"
             })
@@ -70,7 +70,7 @@ const getAllTransactionDescriptions = async (req, res) => {
 const getAllData = async (req, res) => {
     try {
         if (req.user === "invalidToken") {
-            return res.status(20).json({
+            return res.status(200).json({
                 success: false,
                 statusCode: 401, message: "unauthorized"
             })
