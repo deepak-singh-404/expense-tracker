@@ -26,11 +26,14 @@ const addData = async (req, res) => {
         if (!_transactionDescription) {
             const newDescription = await new TransactionDescription({
                 title: transactionDescription.toLowerCase(),
+                count: 1,
                 userId: _id,
                 timestamp: formattedTimestamp
             })
             await newDescription.save()
         }
+        _transactionDescription.count = _transactionDescription.count + 1
+        _transactionDescription.save()
         return res.status(201).json({
             statusCode: 201,
             success: true,

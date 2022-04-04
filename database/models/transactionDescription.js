@@ -5,7 +5,11 @@ const transactionDescriptionSchema = new Schema({
     title: {
         type: String,
         required: true,
-        trim:true
+        trim: true
+    },
+    count: {
+        type: Number,
+        default: 0
     },
     userId: {
         type: Schema.Types.ObjectId,
