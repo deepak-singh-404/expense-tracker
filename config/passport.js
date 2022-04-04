@@ -17,6 +17,7 @@ module.exports = passport => {
                     return done(null, user)
                 }
                 else {
+                    return done(null, "invalidToken")
                     console.log("====INVALID TOKEN====")
                 }
             }

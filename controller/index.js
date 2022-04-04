@@ -4,6 +4,12 @@ const { formattedTimestamp } = require('../utils/timestamp')
 
 const addData = async (req, res) => {
     try {
+        if (req.user === "invalidToken") {
+            return res.status(20).json({
+                success: false,
+                statusCode: 401, message: "unauthorized"
+            })
+        }
         const { _id } = req.user
         const { amount, transactionType, transactionDescription, month, year } = req.body
         const transaction = await new Data({
@@ -39,6 +45,12 @@ const addData = async (req, res) => {
 
 const getAllTransactionDescriptions = async (req, res) => {
     try {
+        if (req.user === "invalidToken") {
+            return res.status(20).json({
+                success: false,
+                statusCode: 401, message: "unauthorized"
+            })
+        }
         const { _id } = req.user
         const _transactionDescription = await TransactionDescription.find({ userId: _id })
         return res.status(200).json({
@@ -57,6 +69,12 @@ const getAllTransactionDescriptions = async (req, res) => {
 
 const getAllData = async (req, res) => {
     try {
+        if (req.user === "invalidToken") {
+            return res.status(20).json({
+                success: false,
+                statusCode: 401, message: "unauthorized"
+            })
+        }
         const { _id } = req.user
         const _data = await Data.find({ userId: _id })
         return res.status(200).json({
