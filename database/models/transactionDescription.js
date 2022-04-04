@@ -4,7 +4,8 @@ const { Schema } = mongoose;
 const transactionDescriptionSchema = new Schema({
     title: {
         type: String,
-        required: true
+        required: true,
+        trim:true
     },
     userId: {
         type: Schema.Types.ObjectId,
