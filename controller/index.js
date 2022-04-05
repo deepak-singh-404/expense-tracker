@@ -32,7 +32,7 @@ const addData = async (req, res) => {
             })
             await newDescription.save()
         }
-        else{
+        else {
             _transactionDescription.count = _transactionDescription.count + 1
             _transactionDescription.save()
         }
@@ -96,4 +96,25 @@ const getAllData = async (req, res) => {
     }
 }
 
-module.exports = { addData, getAllData, getAllTransactionDescriptions }
+const deleteTransaction = async (req, res) => {
+    try {
+        if (req.user === "invalidToken") {
+            return res.status(200).json({
+                success: false,
+                statusCode: 401, message: "unauthorized"
+            })
+        }
+        const id = req.params.id
+        const data = await Data.findByIdAndDelete(id)
+        return res.status(200).json({
+            statusCode: 200,
+            success: true,
+            data: data
+        })
+    }
+    catch (error) {
+        return res.status(500).json({ success: false, message: error.message })
+    }
+}
+
+module.exports = { addData, getAllData, getAllTransactionDescriptions, deleteTransaction }

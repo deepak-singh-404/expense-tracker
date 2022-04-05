@@ -5,7 +5,7 @@ const routes = express.Router()
 
 const { userRegister, userLogin } = require('../controller/auth')
 
-const { addData, getAllData, getAllTransactionDescriptions } = require('../controller/index')
+const { addData, getAllData, getAllTransactionDescriptions, deleteTransaction } = require('../controller/index')
 
 routes.post('/user/register', userRegister)
 
@@ -16,5 +16,7 @@ routes.post('/user/transaction', passport.authenticate('jwt', { session: false }
 routes.get('/user/transaction', passport.authenticate('jwt', { session: false }), getAllData)
 
 routes.get('/user/transactiondescription', passport.authenticate('jwt', { session: false }), getAllTransactionDescriptions)
+
+routes.get('/user/transactiondescription/:id', passport.authenticate('jwt', { session: false }), deleteTransaction)
 
 module.exports = routes
