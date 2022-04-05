@@ -32,8 +32,10 @@ const addData = async (req, res) => {
             })
             await newDescription.save()
         }
-        _transactionDescription.count = _transactionDescription.count + 1
-        _transactionDescription.save()
+        else{
+            _transactionDescription.count = _transactionDescription.count + 1
+            _transactionDescription.save()
+        }
         return res.status(201).json({
             statusCode: 201,
             success: true,
