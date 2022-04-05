@@ -17,6 +17,6 @@ routes.get('/user/transaction', passport.authenticate('jwt', { session: false })
 
 routes.get('/user/transactiondescription', passport.authenticate('jwt', { session: false }), getAllTransactionDescriptions)
 
-routes.get('/user/transactiondescription/:id', passport.authenticate('jwt', { session: false }), deleteTransaction)
+routes.delete('/user/transactiondescription/:id', passport.authenticate('jwt', { session: false }), deleteTransaction)
 
 module.exports = routes
