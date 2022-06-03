@@ -72,6 +72,12 @@ const getAllTransactionDescriptions = async (req, res) => {
     }
 }
 
+const monthNames = ["january", "february", "march", "april", "may", "june",
+  "july", "ugust", "september", "october", "november", "december"
+];
+
+
+
 const getAllData = async (req, res) => {
     try {
         if (req.user === "invalidToken") {
@@ -81,7 +87,8 @@ const getAllData = async (req, res) => {
             })
         }
         const { _id } = req.user
-        const _data = await Data.find({ userId: _id })
+        const d = new Date();
+        const _data = await Data.find({ userId: _id, month:monthNames[d.getMonth()]}).sort({timestamp:-1})
         return res.status(200).json({
             statusCode: 200,
             success: true,
