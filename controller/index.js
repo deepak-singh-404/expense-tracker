@@ -57,7 +57,7 @@ const getAllTransactionDescriptions = async (req, res) => {
             })
         }
         const { _id } = req.user
-        const _transactionDescription = await TransactionDescription.find({ userId: _id })
+        const _transactionDescription = await TransactionDescription.find({ userId: _id }).sort({timestamp:-1})
         return res.status(200).json({
             statusCode: 200,
             success: true,
