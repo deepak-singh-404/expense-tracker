@@ -11,10 +11,11 @@ const addData = async (req, res) => {
             })
         }
         const { _id } = req.user
-        const { amount, transactionType, transactionDescription, month, year } = req.body
+        const { amount, transactionType, transactionDescription, month, year, transactionSubDescription } = req.body
         const transaction = await new Data({
             userId: _id,
             amount,
+            transactionSubDescription: transactionSubDescription.toLowerCase(),
             transactionType: transactionType.toLowerCase(),
             transactionDescription: transactionDescription.toLowerCase(),
             month: month.toLowerCase(),
@@ -57,7 +58,7 @@ const getAllTransactionDescriptions = async (req, res) => {
             })
         }
         const { _id } = req.user
-        const _transactionDescription = await TransactionDescription.find({ userId: _id }).sort({timestamp:-1})
+        const _transactionDescription = await TransactionDescription.find({ userId: _id }).sort({ timestamp: -1 })
         return res.status(200).json({
             statusCode: 200,
             success: true,
@@ -73,9 +74,11 @@ const getAllTransactionDescriptions = async (req, res) => {
 }
 
 const monthNames = ["january", "february", "march", "april", "may", "june",
-  "july", "ugust", "september", "october", "november", "december"
+    "july", "ugust", "september", "october", "november", "december"
 ];
 
+//const d = new Date();
+//month:monthNames[d.getMonth()]
 
 
 const getAllData = async (req, res) => {
@@ -87,8 +90,7 @@ const getAllData = async (req, res) => {
             })
         }
         const { _id } = req.user
-        const d = new Date();
-        const _data = await Data.find({ userId: _id, month:monthNames[d.getMonth()]}).sort({timestamp:-1})
+        const _data = await Data.find({ userId: _id, month: JSON.parse(req.query.month) }).sort({ timestamp: -1 })
         return res.status(200).json({
             statusCode: 200,
             success: true,
@@ -96,7 +98,6 @@ const getAllData = async (req, res) => {
             count: _data.length,
             data: _data
         })
-
     }
     catch (error) {
         return res.status(500).json({ success: false, message: error.message })

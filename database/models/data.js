@@ -13,22 +13,26 @@ const dataSchema = new Schema({
     transactionType: {
         type: String,
         default: "debit",
-        trim:true
+        trim: true
+    },
+    transactionSubDescription: {
+        type: String,
+        trim: true
     },
     transactionDescription: {
         type: String,
         required: true,
-        trim:true
+        trim: true
     },
     month: {
         type: String,
         required: true,
-        trim:true
+        trim: true
     },
     year: {
         type: String,
         required: true,
-        trim:true
+        trim: true
     },
     timestamp: {
         type: String,
