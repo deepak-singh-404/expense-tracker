@@ -3,7 +3,7 @@ const mongoose = require('mongoose')
 const connectDatabase = () => {
     return new Promise(async (resolve, reject) => {
         try {
-            await mongoose.connect(process.env.MONGO_URL.replace("<password>", process.env.MONGO_PASSWORD), { useNewUrlParser: true, useUnifiedTopology: true })
+            await mongoose.connect("mongodb+srv://sample_project_user:m1RNPhjfk78CaxXl@cluster0.b6pao.mongodb.net/expense-t?retryWrites=true&w=majority", { useNewUrlParser: true, useUnifiedTopology: true })
             console.log("===DB CONNECTED===")
             resolve({ message: "Database Connected" })
         }
