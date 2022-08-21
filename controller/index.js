@@ -9,6 +9,7 @@ const addData = async (req, res) => {
         const _transactionDescription = await Category.findOne({ userId: _id, _id:  category})
         if (_transactionDescription) {
             _transactionDescription.count = _transactionDescription.count + 1
+            _transactionDescription.total = _transactionDescription.total + Number(amount)
             await _transactionDescription.save()
         }
         const transaction = await new Data({
