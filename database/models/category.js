@@ -1,7 +1,7 @@
 const mongoose = require("mongoose");
 const { Schema } = mongoose;
 
-const transactionDescriptionSchema = new Schema({
+const categorySchema = new Schema({
     title: {
         type: String,
         required: true,
@@ -23,4 +23,4 @@ const transactionDescriptionSchema = new Schema({
     timestamps: true
 });
 
-module.exports = mongoose.model("TransactionDescription", transactionDescriptionSchema);
+module.exports = mongoose.model("Category", categorySchema);

@@ -1,42 +1,29 @@
 const Data = require('../database/models/data')
-const TransactionDescription = require('../database/models/transactionDescription')
+const Category = require('../database/models/category')
 const { formattedTimestamp } = require('../utils/timestamp')
 
 const addData = async (req, res) => {
     try {
-        if (req.user === "invalidToken") {
-            return res.status(200).json({
-                success: false,
-                statusCode: 401, message: "unauthorized"
-            })
-        }
         const { _id } = req.user
-        const { amount, transactionType, transactionDescription, month, year, transactionSubDescription } = req.body
+        const { amount, transactionType, description, month, year, category, paymentMode, paymentModePlatfrom } = req.body
+        const _transactionDescription = await Category.findOne({ userId: _id, _id:  category})
+        if (_transactionDescription) {
+            _transactionDescription.count = _transactionDescription.count + 1
+            await _transactionDescription.save()
+        }
         const transaction = await new Data({
             userId: _id,
             amount,
-            transactionSubDescription: transactionSubDescription.toLowerCase(),
+            description: description,
             transactionType: transactionType.toLowerCase(),
-            transactionDescription: transactionDescription.toLowerCase(),
+            category: category,
             month: month.toLowerCase(),
             year,
+            paymentMode: paymentMode.toLowerCase(),
+            paymentModePlatfrom: paymentModePlatfrom.toLowerCase(),
             timestamp: formattedTimestamp
         })
         await transaction.save()
-        const _transactionDescription = await TransactionDescription.findOne({ userId: _id, title: transactionDescription.toLowerCase() })
-        if (!_transactionDescription) {
-            const newDescription = await new TransactionDescription({
-                title: transactionDescription.toLowerCase(),
-                count: 1,
-                userId: _id,
-                timestamp: formattedTimestamp
-            })
-            await newDescription.save()
-        }
-        else {
-            _transactionDescription.count = _transactionDescription.count + 1
-            _transactionDescription.save()
-        }
         return res.status(201).json({
             statusCode: 201,
             success: true,
@@ -49,24 +36,17 @@ const addData = async (req, res) => {
     }
 }
 
-const getAllTransactionDescriptions = async (req, res) => {
+const getAllCategories = async (req, res) => {
     try {
-        if (req.user === "invalidToken") {
-            return res.status(200).json({
-                success: false,
-                statusCode: 401, message: "unauthorized"
-            })
-        }
         const { _id } = req.user
-        const _transactionDescription = await TransactionDescription.find({ userId: _id }).sort({ timestamp: -1 })
+        const categories = await Category.find({ userId: _id }).sort({ timestamp: -1 })
         return res.status(200).json({
             statusCode: 200,
             success: true,
-            message: "All Transaction Description.",
-            count: _transactionDescription.length,
-            data: _transactionDescription
+            message: "All Categories.",
+            count: categories.length,
+            data: categories
         })
-
     }
     catch (error) {
         return res.status(500).json({ success: false, message: error.message })
@@ -77,20 +57,16 @@ const monthNames = ["january", "february", "march", "april", "may", "june",
     "july", "ugust", "september", "october", "november", "december"
 ];
 
-//const d = new Date();
-//month:monthNames[d.getMonth()]
-
-
 const getAllData = async (req, res) => {
     try {
-        if (req.user === "invalidToken") {
-            return res.status(200).json({
-                success: false,
-                statusCode: 401, message: "unauthorized"
-            })
-        }
         const { _id } = req.user
-        const _data = await Data.find({ userId: _id, month: JSON.parse(req.query.month) }).sort({ timestamp: -1 })
+        let _data = null
+        if (req.query.month){
+            _data = await Data.find({ userId: _id, month: req.query.month}).sort({ timestamp: -1 }).populate('category')
+        }
+        else{
+            _data = await Data.find({ userId: _id}).sort({ timestamp: -1 }).populate('category')
+        }
         return res.status(200).json({
             statusCode: 200,
             success: true,
@@ -106,12 +82,6 @@ const getAllData = async (req, res) => {
 
 const deleteTransaction = async (req, res) => {
     try {
-        if (req.user === "invalidToken") {
-            return res.status(200).json({
-                success: false,
-                statusCode: 401, message: "unauthorized"
-            })
-        }
         const id = req.params.id
         const data = await Data.findByIdAndDelete(id)
         return res.status(200).json({
@@ -125,4 +95,37 @@ const deleteTransaction = async (req, res) => {
     }
 }
 
-module.exports = { addData, getAllData, getAllTransactionDescriptions, deleteTransaction }
+const addCategory = async (req, res) => {
+    try {
+        const { title } = req.body
+        const _transactionDescription = await Category.findOne({ userId: req.user.id, title: title.toLowerCase() })
+        if (!_transactionDescription) {
+            const newDescription = await new Category({
+                title: title.toLowerCase(),
+                count: 0,
+                userId: req.user.id,
+                timestamp: formattedTimestamp
+            })
+            await newDescription.save()
+            return res.status(201).json({
+                statusCode: 200,
+                success: true,
+                message: "Added Successfully.",
+                data: newDescription
+            })
+        }
+        else {
+            return res.status(200).json({
+                statusCode: 409,
+                success: false,
+                message: "Already Added.",
+                data: null
+            })
+        }
+    }
+    catch (error) {
+        return res.status(500).json({ success: false, message: error.message })
+    }
+}
+
+module.exports = { addData, getAllData, getAllCategories, deleteTransaction, addCategory }

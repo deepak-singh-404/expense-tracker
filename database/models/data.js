@@ -15,14 +15,13 @@ const dataSchema = new Schema({
         default: "debit",
         trim: true
     },
-    transactionSubDescription: {
+    description: {
         type: String,
         trim: true
     },
-    transactionDescription: {
-        type: String,
-        required: true,
-        trim: true
+    category: {
+        type: Schema.Types.ObjectId,
+        ref: 'Category'
     },
     month: {
         type: String,
@@ -30,6 +29,16 @@ const dataSchema = new Schema({
         trim: true
     },
     year: {
+        type: String,
+        required: true,
+        trim: true
+    },
+    paymentMode:{
+        type: String,
+        required: true,
+        trim: true
+    },
+    paymentModePlatfrom : {
         type: String,
         required: true,
         trim: true
