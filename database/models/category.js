@@ -8,7 +8,8 @@ const categorySchema = new Schema({
         trim: true
     },
     total:{
-        type: Number
+        type: Number,
+        default:0
     },
     count: {
         type: Number,
