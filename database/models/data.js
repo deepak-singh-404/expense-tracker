@@ -40,7 +40,6 @@ const dataSchema = new Schema({
     },
     paymentModePlatfrom : {
         type: String,
-        required: true,
         trim: true
     },
     timestamp: {
