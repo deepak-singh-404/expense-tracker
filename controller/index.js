@@ -41,12 +41,19 @@ const getAllCategories = async (req, res) => {
     try {
         const { _id } = req.user
         const categories = await Category.find({ userId: _id }).sort({ timestamp: -1 })
+        const dataOfCurrentMonth = []
+        for (const data of categories){
+            let date = data?.timestamp.split(" ")[0]
+            if(new Date(date).getMonth() == new Date().getMonth()){
+                dataOfCurrentMonth.push(data)
+            }
+        }
         return res.status(200).json({
             statusCode: 200,
             success: true,
             message: "All Categories.",
-            count: categories.length,
-            data: categories
+            count: dataOfCurrentMonth.length,
+            data: dataOfCurrentMonth
         })
     }
     catch (error) {
